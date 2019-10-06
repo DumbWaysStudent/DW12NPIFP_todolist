@@ -85,8 +85,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: '5%',
     paddingRight: '5%',
-    borderWidth: 2,
-    borderColor: 'red',
-
   },
 })
