@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 /* import { tsModuleDeclaration } from '@babel/types'; */
 import { Input, Item, Button } from 'native-base';
 /* import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'; */
@@ -26,6 +26,9 @@ export default class App extends Component {
     this.state.tasks.push(this.state.text)
     this.setState([...this.state.tasks])
     this.setState({ text: '' })
+  };
+  delButton = () => {
+
   }
   //Akhir Function
 
