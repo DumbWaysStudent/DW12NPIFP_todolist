@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 /* import { tsModuleDeclaration } from '@babel/types'; */
-import { Input, Item, Button, Icon } from 'native-base';
+import { Input, Item, Button, Icon, CheckBox, ListItem } from 'native-base';
 /* import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'; */
 
 
@@ -10,27 +10,54 @@ export default class App extends Component {
     super(props);
     this.state = {
       tasks: [
-        'work',
-        'swim',
-        'study',
-        'sleep',
-        'run'
+        {
+          id: '1',
+          nametask: 'work',
+          selesai: false
+        },
+        {
+          id: '2',
+          nametask: 'swim',
+          selesai: false
+        },
+        {
+          id: '3',
+          nametask: 'study',
+          selesai: false
+        },
+        {
+          id: '4',
+          nametask: 'sleep',
+          selesai: false
+        },
+        {
+          id: '5',
+          nametask: 'run',
+          selesai: false
+        }
       ],
       text: '',
     };
   }
   //Awal Function
   addButton = () => {
-    //unshift jika menambah keatas
-    //push jika ke akhir array
-    this.state.tasks.push(this.state.text)
-    this.setState([...this.state.tasks])
-    this.setState({ text: '' })
+    if (this.state.text != '') {
+      let id = this.state.tasks.length + 1
+      const isi = { "id": id, "nametask": this.state.text, "selesai": false }
+      this.setState({ tasks: [...this.state.tasks, isi], text: '' })
+    }
   };
   delButton = (hapus) => {
-    const items = this.state.tasks.filter(function (item) { return item != hapus.item; });
-    this.setState({ tasks: items });
+    const items = this.state.tasks.filter(function (item) { return item.id != hapus.id; });
+    this.setState({ tasks: items })
   };
+  handleCheckBox = (centang) => {
+    let dataItem = this.state.tasks.find(item => centang.id === item.id)
+    if (dataItem) {
+      dataItem.selesai = !centang.selesai
+      this.setState([...this.state.tasks])
+    }
+  }
   //Akhir Function
 
   render() {
@@ -42,12 +69,17 @@ export default class App extends Component {
           </Item>
           <Button info style={styles.addButton} onPress={() => this.addButton()}><Text> Add </Text></Button>
         </View>
-        {this.state.tasks.map((item, index) =>
-          <View style={styles.tasklist}>
-            <Text style={styles.itemFlat}>{item}</Text>
-            <Icon style={styles.iconTrash} onPress={() => this.delButton({ item })} type="FontAwesome" name="trash" />
-          </View>
-        )}
+        {this.state.tasks.map(item => {
+          return (
+            <ListItem key={item.id}>
+              <Item style={styles.tasklist}>
+                <CheckBox style={styles.cekBox} checked={item.selesai} onPress={() => this.handleCheckBox(item)} />
+                <Text style={styles.nameTask}>{item.nametask}</Text>
+              </Item>
+              <Icon style={styles.iconTrash} onPress={() => this.delButton(item)} type="FontAwesome" name="trash" />
+            </ListItem>
+          )
+        })}
       </View>
     );
   }
@@ -71,19 +103,27 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   tasklist: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
     flexDirection: 'row',
-  },
-  itemFlat: {
-    fontSize: 18,
-    padding: 10,
+    alignItems: 'center',
     flex: 1,
+  },
+  cekBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10
+
+  },
+  nameTask: {
+    marginLeft: 15,
+    flex: 1,
+    fontSize: 16,
+
   },
   iconTrash: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: '5%',
     paddingRight: '5%',
+    color: 'tomato'
   },
 })
