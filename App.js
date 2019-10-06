@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 /* import { tsModuleDeclaration } from '@babel/types'; */
-import { Input, Item, Button } from 'native-base';
+import { Input, Item, Button, Icon } from 'native-base';
 /* import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'; */
 
 
@@ -27,9 +27,10 @@ export default class App extends Component {
     this.setState([...this.state.tasks])
     this.setState({ text: '' })
   };
-  delButton = () => {
-
-  }
+  delButton = (hapus) => {
+    const items = this.state.tasks.filter(function (item) { return item != hapus.item; });
+    this.setState({ tasks: items });
+  };
   //Akhir Function
 
   render() {
@@ -41,8 +42,11 @@ export default class App extends Component {
           </Item>
           <Button info style={styles.addButton} onPress={() => this.addButton()}><Text> Add </Text></Button>
         </View>
-        {this.state.tasks.map(item =>
-          <Text style={styles.itemFlat}>{item}</Text>
+        {this.state.tasks.map((item, index) =>
+          <View style={styles.tasklist}>
+            <Text style={styles.itemFlat}>{item}</Text>
+            <Icon style={styles.iconTrash} onPress={() => this.delButton({ item })} type="FontAwesome" name="trash" />
+          </View>
         )}
       </View>
     );
@@ -66,10 +70,23 @@ const styles = StyleSheet.create({
     height: '100%',
     marginLeft: 10,
   },
+  tasklist: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+  },
   itemFlat: {
     fontSize: 18,
     padding: 10,
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-  }
+    flex: 1,
+  },
+  iconTrash: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    borderWidth: 2,
+    borderColor: 'red',
+
+  },
 })
