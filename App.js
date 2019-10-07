@@ -37,14 +37,16 @@ export default class App extends Component {
         }
       ],
       text: '',
+      id: 6,
+      kondisi: false,
+      idIndex: '',
     };
   }
   //Awal Function
   addButton = () => {
     if (this.state.text != '') {
-      let id = this.state.tasks.length + 1
-      const isi = { "id": id, "nametask": this.state.text, "selesai": false }
-      this.setState({ tasks: [...this.state.tasks, isi], text: '' })
+      const isi = { "id": this.state.id, "nametask": this.state.text, "selesai": false }
+      this.setState({ tasks: [...this.state.tasks, isi], text: '', id: this.state.id + 1 })
     }
   };
   delButton = (hapus) => {
@@ -55,20 +57,42 @@ export default class App extends Component {
     let dataItem = this.state.tasks.find(item => centang.id === item.id)
     if (dataItem) {
       dataItem.selesai = !centang.selesai
-      this.setState([...this.state.tasks])
+      this.setState({})
     }
-  }
+  };
+  handleEdit = (diEdit) => {
+    let indexOfArray = this.state.tasks.indexOf(diEdit)
+    this.setState({ text: diEdit.nametask, kondisi: true, idIndex: indexOfArray })
+  };
+  handleChange = () => {
+    if (this.state.text != '') {
+      this.state.tasks[this.state.idIndex].nametask = this.state.text
+      this.setState([...this.state.tasks])
+      this.setState({ text: '', edit: false })
+    } else {
+      alert('Mohon di isi')
+    }
+  };
   //Akhir Function
 
   render() {
     return (
       <View>
-        <View style={styles.viewInput}>
-          <Item regular style={styles.inputTodo}>
-            <Input placeholder='New Todo' value={this.state.text} onChangeText={(text) => this.setState({ text })} />
-          </Item>
-          <Button info style={styles.addButton} onPress={() => this.addButton()}><Text> Add </Text></Button>
-        </View>
+        {this.state.kondisi ?
+          <View style={styles.viewInput}>
+            <Item regular style={styles.inputTodo}>
+              <Input value={this.state.text} onChangeText={(text) => this.setState({ text })} />
+            </Item>
+            <Button info style={styles.addButton} onPress={() => this.handleChange()}><Text> Change </Text></Button>
+          </View> :
+          <View style={styles.viewInput}>
+            <Item regular style={styles.inputTodo}>
+              <Input placeholder='New Todo' value={this.state.text} onChangeText={(text) => this.setState({ text })} />
+            </Item>
+            <Button info style={styles.addButton} onPress={() => this.addButton()}><Text> Add </Text></Button>
+          </View>
+        }
+
         {this.state.tasks.map(item => {
           return (
             <ListItem key={item.id}>
@@ -76,6 +100,7 @@ export default class App extends Component {
                 <CheckBox style={styles.cekBox} checked={item.selesai} onPress={() => this.handleCheckBox(item)} />
                 <Text style={styles.nameTask}>{item.nametask}</Text>
               </Item>
+              <Icon style={styles.iconEdit} onPress={() => this.handleEdit(item)} type="FontAwesome" name="pencil" />
               <Icon style={styles.iconTrash} onPress={() => this.delButton(item)} type="FontAwesome" name="trash" />
             </ListItem>
           )
@@ -119,11 +144,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
 
   },
+  iconEdit: {
+    fontSize: 20,
+  },
   iconTrash: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: '5%',
-    paddingRight: '5%',
-    color: 'tomato'
+    marginLeft: '5%',
+    marginRight: '5%',
+    color: 'tomato',
+    fontSize: 20
   },
 })
