@@ -13,56 +13,56 @@ export default class App extends Component {
         {
           id: '1',
           nametask: 'work',
-          selesai: false
+          boolDone: false
         },
         {
           id: '2',
           nametask: 'swim',
-          selesai: false
+          boolDone: false
         },
         {
           id: '3',
           nametask: 'study',
-          selesai: false
+          boolDone: false
         },
         {
           id: '4',
           nametask: 'sleep',
-          selesai: false
+          boolDone: false
         },
         {
           id: '5',
           nametask: 'run',
-          selesai: false
+          boolDone: false
         }
       ],
       text: '',
       id: 6,
-      kondisi: false,
+      condiEdit: false,
       idIndex: '',
     };
   }
   //Awal Function
   addButton = () => {
     if (this.state.text != '') {
-      const isi = { "id": this.state.id, "nametask": this.state.text, "selesai": false }
+      const isi = { "id": this.state.id, "nametask": this.state.text, "boolDone": false }
       this.setState({ tasks: [...this.state.tasks, isi], text: '', id: this.state.id + 1 })
     }
   };
-  delButton = (hapus) => {
-    const items = this.state.tasks.filter(function (item) { return item.id != hapus.id; });
+  delButton = (delFunction) => {
+    const items = this.state.tasks.filter(function (item) { return item.id != delFunction.id; });
     this.setState({ tasks: items })
   };
-  handleCheckBox = (centang) => {
-    let dataItem = this.state.tasks.find(item => centang.id === item.id)
+  handleCheckBox = (checkBoxDone) => {
+    let dataItem = this.state.tasks.find(item => checkBoxDone.id === item.id)
     if (dataItem) {
-      dataItem.selesai = !centang.selesai
+      dataItem.boolDone = !checkBoxDone.boolDone
       this.setState({})
     }
   };
   handleEdit = (diEdit) => {
     let indexOfArray = this.state.tasks.indexOf(diEdit)
-    this.setState({ text: diEdit.nametask, kondisi: true, idIndex: indexOfArray })
+    this.setState({ text: diEdit.nametask, condiEdit: true, idIndex: indexOfArray })
   };
   handleChange = () => {
     if (this.state.text != '') {
@@ -78,7 +78,7 @@ export default class App extends Component {
   render() {
     return (
       <View>
-        {this.state.kondisi ?
+        {this.state.condiEdit ?
           <View style={styles.viewInput}>
             <Item regular style={styles.inputTodo}>
               <Input value={this.state.text} onChangeText={(text) => this.setState({ text })} />
@@ -97,7 +97,7 @@ export default class App extends Component {
           return (
             <ListItem key={item.id}>
               <Item style={styles.tasklist}>
-                <CheckBox style={styles.cekBox} checked={item.selesai} onPress={() => this.handleCheckBox(item)} />
+                <CheckBox style={styles.cekBox} checked={item.boolDone} onPress={() => this.handleCheckBox(item)} />
                 <Text style={styles.nameTask}>{item.nametask}</Text>
               </Item>
               <Icon style={styles.iconEdit} onPress={() => this.handleEdit(item)} type="FontAwesome" name="pencil" />
