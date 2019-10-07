@@ -68,7 +68,7 @@ export default class App extends Component {
     if (this.state.text != '') {
       this.state.tasks[this.state.idIndex].nametask = this.state.text
       this.setState([...this.state.tasks])
-      this.setState({ text: '', edit: false })
+      this.setState({ text: '', condiEdit: false })
     } else {
       alert('Mohon di isi')
     }
